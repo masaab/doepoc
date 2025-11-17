@@ -8,10 +8,10 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_CONTAINER_REGISTRY: doepocregistry  # Set this to your ACR name
-  CONTAINER_APP_NAME: doepoccontainerapp  # Set this to your Container Instance name
-  RESOURCE_GROUP: rg-doepoc  # Set this to your resource group
-  IMAGE_NAME: windows-server-2022-iis  # Set this to your desired image name
+  AZURE_CONTAINER_REGISTRY: doepocregistry # Set this to your ACR name
+  CONTAINER_APP_NAME: doepoccontainerapp # Set this to your Container Instance name
+  RESOURCE_GROUP: rg-doepoc # Set this to your resource group
+  IMAGE_NAME: windows-server-2022-iis # Set this to your desired image name
 
 jobs:
   build-and-deploy:
@@ -40,9 +40,24 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Azure Container Apps
-        uses: azure/container-apps-deploy-action@v1
+      - name: Deploy to Azure Container Instance
+        uses: azure/CLI@v1
         with:
-          containerAppName: ${{ env.CONTAINER_APP_NAME }}
-          resourceGroup: ${{ env.RESOURCE_GROUP }}
-          imageToDeploy: ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          inlineScript: |
+           az container delete 
+           --resource-group ${{ env.RESOURCE_GROUP }} 
+           --name ${{ env.CONTAINER_APP_NAME }} 
+           --yes
+
+      
+           az container create 
+           --resource-group ${{ env.RESOURCE_GROUP }} 
+           --name ${{ env.CONTAINER_APP_NAME }} 
+           --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} 
+           --registry-login-server ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io 
+           --registry-username ${{ secrets.ACR_USERNAME }} 
+           --registry-password ${{ secrets.ACR_PASSWORD }} 
+           --dns-name-label ${{ env.CONTAINER_APP_NAME }} 
+           --ports 80 443 
+           --cpu 1 
+           --memory 1.5
