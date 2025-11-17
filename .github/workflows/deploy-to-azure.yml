@@ -45,4 +45,4 @@ jobs:
         run: |
           az container delete --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CONTAINER_APP_NAME }} --yes
           
-          az container create --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CONTAINER_APP_NAME }} --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} --registry-login-server ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io --registry-username ${{ secrets.ACR_USERNAME }} --registry-password ${{ secrets.ACR_PASSWORD }} --dns-name-label ${{ env.CONTAINER_APP_NAME }} --ports 80 443 --cpu 1 --memory 1.5
+          az container create --resource-group ${{ env.RESOURCE_GROUP }} --name ${{ env.CONTAINER_APP_NAME }} --image ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ github.sha }} --os-type Windows --registry-login-server ${{ env.AZURE_CONTAINER_REGISTRY }}.azurecr.io --registry-username ${{ secrets.ACR_USERNAME }} --registry-password ${{ secrets.ACR_PASSWORD }} --dns-name-label ${{ env.CONTAINER_APP_NAME }} --ports 80 443 --cpu 1 --memory 1.5
