@@ -7,7 +7,7 @@ RUN powershell -Command Remove-Item -Recurse -Force C:\inetpub\wwwroot\*
 
 # Copy website content
 COPY index.html C:/inetpub/wwwroot/
-
+COPY about.html C:/inetpub/wwwroot/
 
 # Expose port 80
 EXPOSE 80
