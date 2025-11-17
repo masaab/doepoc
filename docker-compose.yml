@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  iis-server:
+    build: .
+    image: windows-server-2022-iis:latest
+    container_name: iis-hello-world
+    ports:
+      - "8080:80"
+    restart: unless-stopped
